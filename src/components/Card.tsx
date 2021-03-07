@@ -1,17 +1,19 @@
 import React from 'react';
 import './Card.css';
-export type CardProps = {
-    // using `interface` is also ok
-    title: string;
+import { MyCard } from './CardGrid';
+export type MyProps = {
+    card: MyCard;
+    handleCardClick: (card: MyCard) => void;
 };
 type MyState = {
     count: number; // like this
 };
-class Card extends React.Component<CardProps, MyState> {
+class Card extends React.Component<MyProps, MyState> {
     state: MyState = {
         // optional second annotation for better type inference
         count: 0,
     };
+
     render() {
         return (
             <div className="blogcard-d1">
@@ -19,13 +21,13 @@ class Card extends React.Component<CardProps, MyState> {
                 <div className="body">
 
                     <div className="head">
-                        <h4 className="heading">{this.props.title}</h4>
+                        <h4 className="heading">{this.props.card.title}</h4>
                         <p className="date">19/9/2018</p>
                     </div>
                     <div className="info">
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui odit ut voluptates commodi distinctio dolore!</p>
                     </div>
-                    <button className="btn btn-purple">More</button>
+                    <button className="btn btn-purple" onClick={() => this.props.handleCardClick(this.props.card)}>More</button>
                 </div>
             </div>
         );

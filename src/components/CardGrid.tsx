@@ -1,21 +1,28 @@
 import React from 'react';
 import './CardGrid.css';
 import Card from './Card';
+export interface MyCard {
+    title: string;
+}
 export type CardGridProps = {
+    cards: MyCard[]
 };
-type MyState = {
-    count: number; // like this
-};
+type MyState = {};
+
 class CardGrid extends React.Component<CardGridProps, MyState> {
-    state: MyState = {
-        // optional second annotation for better type inference
-        count: 0,
-    };
+    handleCardClick = (card: MyCard) => {
+        alert(`${card.title} clicked!`);
+    }
+    private renderCards = () => this.props.cards.map(card => 
+    <Card 
+    handleCardClick={this.handleCardClick}
+    card={card} />)
     render() {
         return (
             <div className="card-grid">
-                <Card title={"Hallo"}/>
-                <Card title={"Zweite"}/>
+                {
+                    this.renderCards()
+                }
             </div>
         );
     }

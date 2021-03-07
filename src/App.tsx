@@ -1,9 +1,18 @@
 import './App.css';
-import CardGrid from './components/CardGrid';
+import CardGrid, { MyCard } from './components/CardGrid';
+
+const myCards: MyCard[] = [
+  {
+    title: "First"
+  },
+  {
+    title: "Second"
+  },
+]
 function App() {
   return (
     <div className="App">
-      <CardGrid />
+      <CardGrid cards={myCards} />
     </div>
   );
 }
