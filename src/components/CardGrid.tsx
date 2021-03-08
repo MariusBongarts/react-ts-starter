@@ -13,10 +13,16 @@ class CardGrid extends React.Component<CardGridProps, MyState> {
     handleCardClick = (card: MyCard) => {
         alert(`${card.title} clicked!`);
     }
-    private renderCards = () => this.props.cards.map(card => 
+    componentDidMount() {
+        console.log(this.props.children);
+    }
+    private renderCards = () => this.props.cards.map((card, i) => 
     <Card 
     handleCardClick={this.handleCardClick}
-    card={card} />)
+    card={card} 
+    key={i}
+    />);
+
     render() {
         return (
             <div className="card-grid">
