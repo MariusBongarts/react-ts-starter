@@ -3,7 +3,6 @@ import './Card.css';
 import { MyCard } from './CardGrid';
 export type MyProps = {
     card: MyCard;
-    handleCardClick: (card: MyCard) => void;
 };
 type MyState = {
     count: number; // like this
@@ -22,12 +21,12 @@ class Card extends React.Component<MyProps, MyState> {
 
                     <div className="head">
                         <h4 className="heading">{this.props.card.title}</h4>
-                        <p className="date">19/9/2018</p>
+                        <p className="date">{new Date(this.props.card.created_at).toDateString()}</p>
                     </div>
                     <div className="info">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui odit ut voluptates commodi distinctio dolore!</p>
+                        <p>{this.props.card.url}</p>
                     </div>
-                    <button className="btn btn-purple" onClick={() => this.props.handleCardClick(this.props.card)}>More</button>
+                    <button className="btn btn-purple" onClick={() => window.open(this.props.card.url)}>More</button>
                 </div>
             </div>
         );

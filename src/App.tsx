@@ -1,22 +1,20 @@
+import { useState } from 'react';
 import './App.css';
 import CardGrid, { MyCard } from './components/CardGrid';
 import Language from './hooks/Language';
 import SearchBar from './hooks/Searchbar';
 
-const myCards: MyCard[] = [
-  {
-    title: "First"
-  },
-  {
-    title: "Second"
-  },
-]
+
 function App() {
+  const [cards, setCards] = useState<MyCard[]>([])
+  const getCards = (cards: MyCard[]) => {
+    setCards(cards);
+  };
   return (
     <div className="App">
       <Language />
-      <SearchBar />
-      <CardGrid cards={myCards} />
+      <SearchBar getCards={getCards} />
+      <CardGrid cards={cards} />
     </div>
   );
 }

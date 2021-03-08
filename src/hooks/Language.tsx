@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type ILanguage = 'english' | 'german';
 
-const Language = () => {
+function Language() {
     const [language, setLanguage] = useState<ILanguage>('english');
     const updateLanguage = () => setLanguage(language === 'english' ? 'german' : 'english');
 
@@ -18,4 +18,4 @@ const Language = () => {
     return <h1>Language: <button className="btn btn-purple" onClick={updateLanguage}>{language}</button></h1>
 }
 
-export default Language;
+export default React.memo(Language);

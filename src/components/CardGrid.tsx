@@ -3,6 +3,8 @@ import './CardGrid.css';
 import Card from './Card';
 export interface MyCard {
     title: string;
+    url: string;
+    created_at: string;
 }
 export type CardGridProps = {
     cards: MyCard[]
@@ -18,7 +20,6 @@ class CardGrid extends React.Component<CardGridProps, MyState> {
     }
     private renderCards = () => this.props.cards.map((card, i) => 
     <Card 
-    handleCardClick={this.handleCardClick}
     card={card} 
     key={i}
     />);
