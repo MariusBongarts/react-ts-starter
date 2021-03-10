@@ -1,13 +1,12 @@
 import axios from "axios";
 import { useRef, useState } from "react";
-import { MyCard } from "../components/CardGrid";
+import CardGrid, { MyCard } from "../components/CardGrid";
+import { CardContext } from "../contexts/CardContext";
 
-export type SearchBarProps = {
-    getCards: (cards: MyCard[]) => void;
-};
 
-function SearchBar({ getCards }: SearchBarProps) {
+function SearchBar() {
     const [query, setQuery] = useState("react hooks");
+    const [cards, setCards] = useState<MyCard[]>([])
     /* We can pass useRef a default value.
        We don't need it here, so we pass in null to reference an empty object
     */
@@ -27,7 +26,9 @@ function SearchBar({ getCards }: SearchBarProps) {
         const result = await axios(
             `${endpoint}search?query=${query}`,
         );
-        getCards(result.data.hits);
+        const cardsResult = result.data.hits as MyCard[];
+        console.log(cardsResult);
+        setCards(cardsResult);
     };
 
     function handleSearch(event: any) {
@@ -36,17 +37,21 @@ function SearchBar({ getCards }: SearchBarProps) {
     }
 
     return (
-        <form>
-            <input
-                type="text"
-                onChange={event => setQuery(event.target.value)}
-                ref={searchInput}
-            />
-            <button onClick={handleSearch}>Search</button>
-            <button type="button" onClick={handleClearSearch}>
-                Clear
+        <CardContext.Provider value={{ cards }}>
+            <form>
+                <input
+                    type="text"
+                    onChange={event => setQuery(event.target.value)}
+                    ref={searchInput}
+                />
+                <button onClick={handleSearch}>Search</button>
+                <button type="button" onClick={handleClearSearch}>
+                    Clear
         </button>
-        </form>
+            </form>
+            <CardGrid />
+        </CardContext.Provider>
+
     );
 }
 
