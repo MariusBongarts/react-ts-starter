@@ -15,9 +15,6 @@ class CardGrid extends React.Component<CardGridProps, MyState> {
     handleCardClick = (card: MyCard) => {
         alert(`${card.title} clicked!`);
     }
-    componentDidMount() {
-        console.log(this.props.children);
-    }
 
     render() {
         return (

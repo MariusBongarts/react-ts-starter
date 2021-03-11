@@ -5,7 +5,7 @@ interface ICardCOntext {
     cards: MyCard[]
 }
 
-export const CardContext = React.createContext<ICardCOntext>({ cards: [{ created_at: "", title: "ojsdpo", url: "adsoj" }] });
+export const CardContext = React.createContext<ICardCOntext>({ cards: [] });
 
 // export const CardProvider = ({
 //     cards,

@@ -27,7 +27,6 @@ function SearchBar() {
             `${endpoint}search?query=${query}`,
         );
         const cardsResult = result.data.hits as MyCard[];
-        console.log(cardsResult);
         setCards(cardsResult);
     };
 
