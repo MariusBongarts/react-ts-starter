@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.container .todo {
+    width: 80%;
+}
+
+.container button {
+    color: red;
+    background: white;
+    outline: none;
+    width: 20px;
+}

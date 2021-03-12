@@ -4,7 +4,7 @@ import { GET_DOGS, Dog } from '../queries/queries';
 import DogPhoto from './DogPhoto';
 
 function Dogs() {
-    const { loading, error, data } = useQuery<{ dogs: Dog[] }>(GET_DOGS);
+    const { loading, error, data } = useQuery<{ dogs: Omit<Dog, 'displayName'>[] }>(GET_DOGS);
 
     const [selectedBreed, setSelectedBreed] = useState<string>('');
 
