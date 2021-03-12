@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { FC, KeyboardEvent, useEffect, useRef } from "react";
-import { Dog, ADD_TODO, GET_TODOS, Todo, UPDATE_TODO } from "../queries/queries";
+import { FC, KeyboardEvent, useRef } from "react";
+import { ADD_TODO, GET_TODOS, Todo, UPDATE_TODO } from "../queries/queries";
 import './Todos.css';
 type Props = {
 }
@@ -10,7 +10,7 @@ const Todos: FC<Props> = () => {
 
     const result = useQuery<{ todos: Todo[] }>(GET_TODOS);
 
-    const [addTodo, { data }] = useMutation<Todo>(ADD_TODO);
+    const [addTodo] = useMutation<Todo>(ADD_TODO);
     const [updateTodoMutation] = useMutation<Todo>(UPDATE_TODO);
 
     const submitTodo = async () => {
