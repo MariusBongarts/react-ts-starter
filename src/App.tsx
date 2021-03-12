@@ -3,12 +3,11 @@ import Language from './hooks/Language';
 import SearchBar from './hooks/Searchbar';
 import GraphQlSandbox from './hooks/GraphQlSandbox';
 import { ApolloProvider } from '@apollo/client';
-import apolloClient from './services/apollo-client';
-
+import apolloRateClient from './services/apollo-rate-client';
 
 function App() {
   return (
-    <ApolloProvider client={apolloClient}>
+    <ApolloProvider client={apolloRateClient}>
       <div className="App">
         <GraphQlSandbox />
         <Language />
