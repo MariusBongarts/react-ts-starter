@@ -13,3 +13,8 @@
 .node.fixed {
   fill: #f00;
 }
+
+.label {
+  font-size: 10px;
+  fill: red;
+}
