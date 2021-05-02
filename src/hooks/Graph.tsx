@@ -23,8 +23,11 @@ export type D3Graph = {
   links: D3Link[];
 };
 
-const graph: D3Graph = {
-  nodes: Array.from({ length: 15 }, () => ({ id: 1, type: 'private' })),
+const initialGraph: D3Graph = {
+  nodes: Array.from({ length: 15 }, (i, index) => ({
+    id: index,
+    type: 'private',
+  })),
   links: [
     { id: 0, source: 0, target: 1 },
     { id: 1, source: 1, target: 2 },
@@ -52,11 +55,19 @@ export const graphHeight = window.screen.availHeight;
 
 type Props = {};
 const Graph: FC<Props> = () => {
+  const [graph, setGraph] = useState<D3Graph>(initialGraph);
   const svgRef = useRef<SVGSVGElement>(null);
 
   const [simulation, setSimulation] = useState<
     d3.Simulation<d3.SimulationNodeDatum, undefined>
   >();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setGraph({ ...graph, nodes: [...graph.nodes, { id: 100, type: '' },{ id: 101, type: '' }] });
+    }, 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const _simulation = d3
@@ -67,7 +78,7 @@ const Graph: FC<Props> = () => {
       .force('link', d3.forceLink(graph.links));
 
     setSimulation(_simulation);
-  }, []);
+  }, [graph]);
 
   useEffect(() => {
     const context = d3.select(svgRef.current);
@@ -87,33 +98,6 @@ const Graph: FC<Props> = () => {
     }
 
     simulation?.on('tick', tick);
-
-    function click(event: any, d: any) {
-      delete d.fx;
-      delete d.fy;
-      // @ts-ignore
-      d3.select(this).classed('fixed', false);
-      simulation!.alpha(1).restart();
-    }
-
-    function dragstart() {
-      // @ts-ignore
-      d3.select(this).classed('fixed', true);
-    }
-
-    function clamp(x: number, lo: number, hi: number) {
-      return x < lo ? lo : x > hi ? hi : x;
-    }
-
-    function dragged(event: any, d: any) {
-      d.fx = clamp(event.x, 0, graphWidth);
-      d.fy = clamp(event.y, 0, graphHeight);
-      simulation!.alpha(1).restart();
-    }
-
-    const drag: any = d3.drag().on('start', dragstart).on('drag', dragged);
-
-    node.call(drag).on('click', click);
   }, [simulation]);
 
   return (
@@ -123,9 +107,13 @@ const Graph: FC<Props> = () => {
       height={graphHeight}
       ref={svgRef}
     >
-      {simulation && <Links links={graph.links} simulation={simulation} />}
-      {simulation && <Nodes nodes={graph.nodes} simulation={simulation} />}
-      {simulation && <Labels nodes={graph.nodes} />}
+      {simulation && (
+        <>
+          <Links links={graph.links} simulation={simulation} />
+          <Nodes nodes={graph.nodes} simulation={simulation} />
+          <Labels nodes={graph.nodes} />
+        </>
+      )}
     </svg>
   );
 };
