@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import { SimulationNodeDatum } from 'd3';
 import Nodes from './Nodes';
 import Links from './Links';
+import Labels from './Labels';
 
 export type D3Node = SimulationNodeDatum & {
   id: number;
@@ -58,41 +59,22 @@ const Graph: FC<Props> = () => {
   >();
 
   useEffect(() => {
-    setSimulation(
-      d3
-        .forceSimulation()
-        .nodes(graph.nodes)
-        .force('charge', d3.forceManyBody())
-        .force('center', d3.forceCenter(graphWidth / 2, graphHeight / 2))
-        .force('link', d3.forceLink(graph.links))
-    );
+    const _simulation = d3
+      .forceSimulation()
+      .nodes(graph.nodes)
+      .force('charge', d3.forceManyBody().strength(-40))
+      .force('center', d3.forceCenter(graphWidth / 2, graphHeight / 2))
+      .force('link', d3.forceLink(graph.links));
+
+    setSimulation(_simulation);
   }, []);
 
   useEffect(() => {
-    simulation?.on('tick', tick);
     const context = d3.select(svgRef.current);
-    // const link = context
-    //   .selectAll('.link')
-    //   .data(graph.links);
-    const link = context
-      .selectAll('.link')
-      .data(graph.links)
-      .join('line')
-      .classed('link', true)
-      .on('click', (e) => console.log(e.target));
 
-    // const node = context
-    //   .selectAll('.node')
-    //   .data(graph.nodes)
-    //   .join('circle')
-    //   .attr('r', 12)
-    //   .classed('node', true)
-    //   .classed('fixed', (d: D3Node) => d.fx !== undefined)
-    //   .attr('type', (d: D3Node) => d.type)
-    //   .on('click', (e) => console.log(e.target));
     const node = context.selectAll('.node');
-
-    const label = d3.selectAll('.label');
+    const link = context.selectAll('.link');
+    const label = context.selectAll('.label');
 
     function tick() {
       link
@@ -100,16 +82,11 @@ const Graph: FC<Props> = () => {
         .attr('y1', (d: any) => d.source.y)
         .attr('x2', (d: any) => d.target.x)
         .attr('y2', (d: any) => d.target.y);
-
-      label
-        .attr('cx', function (d: any) {
-          return d.x + 5;
-        })
-        .attr('cy', function (d: any) {
-          return d.y + 5;
-        });
       node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y);
+      label.attr('x', (d: any) => d.x).attr('y', (d: any) => d.y);
     }
+
+    simulation?.on('tick', tick);
 
     function click(event: any, d: any) {
       delete d.fx;
@@ -140,9 +117,15 @@ const Graph: FC<Props> = () => {
   }, [simulation]);
 
   return (
-    <svg width={graphWidth} height={graphHeight} ref={svgRef}>
-      {simulation && <Nodes nodes={graph.nodes} simulation={simulation} />}
+    <svg
+      className='container'
+      width={graphWidth}
+      height={graphHeight}
+      ref={svgRef}
+    >
       {simulation && <Links links={graph.links} simulation={simulation} />}
+      {simulation && <Nodes nodes={graph.nodes} simulation={simulation} />}
+      {simulation && <Labels nodes={graph.nodes} />}
     </svg>
   );
 };

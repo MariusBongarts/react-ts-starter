@@ -7,11 +7,11 @@ function App() {
   return (
     <div className='App'>
       <Graph />
-      <GraphExample
+      {/* <GraphExample
         width={window.screen.availWidth}
         height={window.screen.availHeight}
         graph={data}
-      />
+      /> */}
     </div>
   );
 }

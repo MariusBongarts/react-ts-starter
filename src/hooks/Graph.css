@@ -1,3 +1,7 @@
+/* .container {
+  background-color: #333;
+} */
+
 .link {
   stroke: #000;
   stroke-width: 1.5px;
@@ -16,5 +20,5 @@
 
 .label {
   font-size: 10px;
-  fill: red;
+  fill: #fff;
 }
