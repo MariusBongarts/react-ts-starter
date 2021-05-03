@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import './Graph.css';
 import * as d3 from 'd3';
-import { SimulationNodeDatum } from 'd3';
+import { SimulationLinkDatum, SimulationNodeDatum } from 'd3';
 import Nodes from './Nodes';
 import Links from './Links';
 import Labels from './Labels';
@@ -11,7 +11,7 @@ export type D3Node = SimulationNodeDatum & {
   type: string;
 };
 
-export type D3Link = {
+export type D3Link = SimulationLinkDatum<any> & {
   source: number;
   target: number;
   id: number;
@@ -63,6 +63,20 @@ const Graph: FC<Props> = () => {
   >();
 
   useEffect(() => {
+    const context = d3.select(svgRef.current);
+    context
+      .append('defs')
+      .append('marker')
+      .attr('id', 'arrow')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 40)
+      .attr('refY', 0)
+      .attr('fill', 'rgb(165, 171, 182)')
+      .attr('markerWidth', 8)
+      .attr('markerHeight', 8)
+      .attr('orient', 'auto')
+      .append('svg:path')
+      .attr('d', 'M0,-5L10,0L0,5');
     setTimeout(() => {
       setGraph({
         ...graph,
@@ -92,26 +106,9 @@ const Graph: FC<Props> = () => {
 
   useEffect(() => {
     const context = d3.select(svgRef.current);
-
-    context
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 30)
-    .attr('refY', 0)
-    .attr('markerWidth', 8)
-    .attr('markerHeight', 8)
-    .attr('orient', 'auto')
-    .append('svg:path')
-    .attr('d', 'M0,-5L10,0L0,5');
-
     const node = context.selectAll('.node');
-    const nodeContainer = context.selectAll('.node-container');
     const link = context.selectAll('.link');
-    // const linkContainer = context.selectAll('.link-container');
-
-    console.log(nodeContainer);
+    const labels = context.selectAll('.label');
 
     function tick() {
       link
@@ -120,7 +117,32 @@ const Graph: FC<Props> = () => {
         .attr('x2', (d: any) => d.target.x)
         .attr('y2', (d: any) => d.target.y);
       node.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
-      // linkContainer.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
+      const labelXorY = (d: any, attr: 'x' | 'y') =>
+        d.target[attr] - (d.target[attr] - d.source[attr]) / 2;
+      const labelRotation = (d: D3Link) => {
+        const y1 = d.target.y;
+        const y2 = d.source.y;
+        const x1 = d.target.x;
+        const x2 = d.source.x;
+        const a = x1 - x2;
+        const b = y2 - y1;
+        const cPow = Math.pow(a, 2) + Math.pow(b, 2);
+        const squareC = Math.sqrt(cPow);
+        const toDegrees = (angle: number) => angle * (180 / Math.PI);
+        const angle = Math.asin(b / squareC);
+        const direction = x2 > x1 ? 1 : -1;
+        return toDegrees(angle) * direction;
+      };
+      labels.attr('x', (d: any) => labelXorY(d, 'x'));
+      labels.attr('y', (d: any) => labelXorY(d, 'y'));
+      labels.attr(
+        'transform',
+        (d: any) =>
+          `rotate(${labelRotation(d)} ${labelXorY(d, 'x')} ${labelXorY(
+            d,
+            'y'
+          )})`
+      );
     }
 
     simulation?.on('tick', tick);
@@ -136,6 +158,7 @@ const Graph: FC<Props> = () => {
       {simulation && (
         <>
           <Links links={graph.links} />
+          <Labels links={graph.links} />
           <Nodes nodes={graph.nodes} simulation={simulation} />
         </>
       )}

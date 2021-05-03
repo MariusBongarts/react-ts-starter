@@ -3,8 +3,8 @@
 } */
 
 .link {
-  stroke: rgb(133, 133, 133);
-  stroke-width: 1.5px;
+  stroke: rgb(165, 171, 182);
+  stroke-width: 1px;
 }
 
 .node {
@@ -20,6 +20,6 @@
 
 .label {
   font-size: 10px;
-  fill: #fff;
+  fill: #000000;
   user-select: none;
 }

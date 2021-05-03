@@ -8,17 +8,10 @@ export const Link: FC<{ link: D3Link }> = ({ link }) => {
   useEffect(() => {
     const context = d3.select(ref.current);
     context.data([link]);
-  }, []);
+  }, [ref, link]);
 
   return (
-    <g className='link-container'>
-      <line
-        className='link'
-        strokeWidth={1}
-        ref={ref}
-        markerEnd='url(#arrow)'
-      />
-    </g>
+    <line className='link' strokeWidth={1} ref={ref} markerEnd='url(#arrow)' />
   );
 };
 
