@@ -64,7 +64,17 @@ const Graph: FC<Props> = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      setGraph({ ...graph, nodes: [...graph.nodes, { id: 100, type: '' },{ id: 101, type: '' }] });
+      setGraph({
+        ...graph,
+        links: [
+          ...graph.links,
+          { id: 18, source: 12, target: 13 },
+          { id: 19, source: 13, target: 14 },
+          { id: 20, source: 14, target: 15 },
+          { id: 20, source: 15, target: 16 },
+        ],
+        nodes: [...graph.nodes, { id: 15, type: '' }, { id: 16, type: '' }],
+      });
     }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -73,7 +83,7 @@ const Graph: FC<Props> = () => {
     const _simulation = d3
       .forceSimulation()
       .nodes(graph.nodes)
-      .force('charge', d3.forceManyBody().strength(-40))
+      .force('charge', d3.forceManyBody().strength(-200))
       .force('center', d3.forceCenter(graphWidth / 2, graphHeight / 2))
       .force('link', d3.forceLink(graph.links));
 
@@ -83,9 +93,25 @@ const Graph: FC<Props> = () => {
   useEffect(() => {
     const context = d3.select(svgRef.current);
 
+    context
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 30)
+    .attr('refY', 0)
+    .attr('markerWidth', 8)
+    .attr('markerHeight', 8)
+    .attr('orient', 'auto')
+    .append('svg:path')
+    .attr('d', 'M0,-5L10,0L0,5');
+
     const node = context.selectAll('.node');
+    const nodeContainer = context.selectAll('.node-container');
     const link = context.selectAll('.link');
-    const label = context.selectAll('.label');
+    // const linkContainer = context.selectAll('.link-container');
+
+    console.log(nodeContainer);
 
     function tick() {
       link
@@ -93,8 +119,8 @@ const Graph: FC<Props> = () => {
         .attr('y1', (d: any) => d.source.y)
         .attr('x2', (d: any) => d.target.x)
         .attr('y2', (d: any) => d.target.y);
-      node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y);
-      label.attr('x', (d: any) => d.x).attr('y', (d: any) => d.y);
+      node.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
+      // linkContainer.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
     }
 
     simulation?.on('tick', tick);
@@ -109,9 +135,8 @@ const Graph: FC<Props> = () => {
     >
       {simulation && (
         <>
-          <Links links={graph.links} simulation={simulation} />
+          <Links links={graph.links} />
           <Nodes nodes={graph.nodes} simulation={simulation} />
-          <Labels nodes={graph.nodes} />
         </>
       )}
     </svg>

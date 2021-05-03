@@ -11,7 +11,15 @@ const Node: FC<{ node: D3Node }> = ({ node }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <circle className='node' r={15} fill={'#ccc'} ref={ref}></circle>;
+  return (
+    <g className='node' ref={ref}>
+      <circle r={24} fill={'rgb(253, 204, 89)'}></circle>
+      <circle r={20} fill={'rgb(253, 204, 89)'}></circle>
+      <text pointerEvents='none'>
+        {node.id}
+      </text>
+    </g>
+  );
 };
 
 const Nodes: FC<{
@@ -22,7 +30,6 @@ const Nodes: FC<{
   useEffect(() => {
     const context = d3.select(ref.current);
     const node = context.selectAll('.node');
-
 
     function click(event: any, d: any) {
       delete d.fx;
@@ -51,7 +58,6 @@ const Nodes: FC<{
 
     node.call(drag).on('click', click);
   }, [nodes, simulation]);
-
 
   return (
     <g className='nodes' ref={ref}>

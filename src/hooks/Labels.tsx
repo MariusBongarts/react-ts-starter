@@ -11,7 +11,7 @@ const Label: FC<{ node: D3Node }> = ({ node }) => {
   });
 
   return (
-    <text className='label' ref={ref}>
+    <text pointerEvents='none' className='label' ref={ref}>
       {node.id}
     </text>
   );

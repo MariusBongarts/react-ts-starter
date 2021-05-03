@@ -3,18 +3,18 @@
 } */
 
 .link {
-  stroke: #000;
+  stroke: rgb(133, 133, 133);
   stroke-width: 1.5px;
 }
 
 .node {
   cursor: move;
   fill: #ccc;
-  stroke: #000;
+  stroke: rgb(255, 180, 5);
   stroke-width: 1.5px;
 }
 
-.node.fixed {
+.node.fixed circle {
   fill: #f00;
 }
 
